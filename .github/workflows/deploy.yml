@@ -1,0 +1,30 @@
+name: weno deploy test
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # (2) 수동 실행
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # (3)
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2 # (4)
+
+      - name: Set up JDK
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu' # See 'Supported distributions' for available options
+          java-version: '11'
+      - run: java -cp java HelloWorldApp
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew # (6)
+        shell: bash
+
+      - name: Build with Gradle
+        run: ./gradlew clean build # (7)
+        shell: bash
